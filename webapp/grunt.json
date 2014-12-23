@@ -37,6 +37,7 @@
                 "app/components/angular-sweetalert/SweetAlert.js",
                 "app/components/underscore/underscore.js",
                 "app/components/angular-underscore/angular-underscore.js",
+                "app/components/angular-wizard/dist/angular-wizard.js"
                 "tmp/js/scripts.js"
             ],
             "dest": "tmp/js/scripts.min.js"
@@ -57,6 +58,7 @@
                 "app/components/nvd3/nv.d3.min.css",
                 "app/components/ace/css/AdminLTE.css",
                 "app/components/bootstrap-sweetalert/lib/sweet-alert.css",
+                "app/components/angular-wizard/dist/angular-wizard.css",
                 "tmp/css/styles.css"
             ],
             "dest": "tmp/css/styles.min.css"

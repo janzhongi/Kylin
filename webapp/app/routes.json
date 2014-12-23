@@ -39,6 +39,14 @@
         }
     },
     {
+        "url": "/cubes/wizard",
+        "params": {
+            "templateUrl": "partials/cubes/wizard_cube_edit.html",
+            "tab": "cubes",
+            "controller": "WizardCubeEditCtrl"
+        }
+    },    
+    {
         "url": "/cubes/add/json",
         "params": {
             "templateUrl": "partials/cubes/cube_json_edit.html",

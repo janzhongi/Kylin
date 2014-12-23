@@ -106,6 +106,7 @@ KylinApp
             if(newValue=="success"){
                 $scope.aceSrcTbLoaded(true);
             }
+            $scope.hiveTbLoad.status="init";
 
         });
 

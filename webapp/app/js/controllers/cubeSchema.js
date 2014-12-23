@@ -1,6 +1,6 @@
 'use strict';
 
-KylinApp.controller('CubeSchemaCtrl', function ($scope, QueryService, UserService, ProjectService, AuthenticationService) {
+KylinApp.controller('CubeSchemaCtrl', function ($scope, QueryService, UserService, ProjectService, AuthenticationService,SweetAlert) {
     //~ Define metadata & class
     $scope.capacities = ['SMALL', 'MEDIUM', 'LARGE'];
     $scope.cubePartitionTypes = ['APPEND', 'UPDATE_INSERT'];
@@ -92,6 +92,8 @@ KylinApp.controller('CubeSchemaCtrl', function ($scope, QueryService, UserServic
     }
 
     $scope.addNewDimension = function (dimension) {
+
+
         $scope.newDimension = (!!dimension)? dimension: Dimension.createNew();
         if(!$scope.newDimension.join){
             $scope.newDimension.join = { "type": "","primary_key": [],"foreign_key": []}
@@ -106,6 +108,10 @@ KylinApp.controller('CubeSchemaCtrl', function ($scope, QueryService, UserServic
     }
 
     $scope.saveNewDimension = function () {
+        if($scope.cubeMetaFrame.fact_table==$scope.newDimension.table&&$scope.newDimension.derived.length){
+            SweetAlert.swal('', "Derived column can only be defined on lookup  table!", 'info');
+            return;
+        }
         if($scope.editFlag.dimensionEdited=="init"){
             $scope.editFlag.dimensionEdited = false;
         }else{
@@ -163,6 +169,12 @@ KylinApp.controller('CubeSchemaCtrl', function ($scope, QueryService, UserServic
     }
 
     $scope.addNewDerived = function (dimension) {
+
+        if($scope.cubeMetaFrame.fact_table==dimension.table){
+            SweetAlert.swal('', "Derived column can only be defined on lookup  table!", 'info');
+            return;
+        }
+
         if(!dimension.derived){
             dimension.derived = [];
         }

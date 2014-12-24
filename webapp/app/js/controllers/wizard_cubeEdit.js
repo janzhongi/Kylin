@@ -5,7 +5,7 @@ KylinApp.controller('WizardCubeEditCtrl', function ($scope, $q, $routeParams, $l
 
     //add or edit ?
     var absUrl = $location.absUrl();
-    $scope.cubeMode = absUrl.indexOf("/cubes/add")!=-1?'addNewCube':absUrl.indexOf("/cubes/edit")!=-1?'editExistCube':'default';
+    $scope.cubeMode = absUrl.indexOf("/cubes/wizard")!=-1?'addNewCube':absUrl.indexOf("/cubes/edit")!=-1?'editExistCube':'default';
     // use this flag to listen when rm or add dimension edited,used in sub-controller cube-schema
     $scope.editFlag ={
         dimensionEdited:"init"

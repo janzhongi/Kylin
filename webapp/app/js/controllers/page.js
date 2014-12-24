@@ -153,6 +153,9 @@ KylinApp.controller('PageCtrl', function ($scope, $q, AccessService,$modal, $loc
                 },
                 project: function(){
                     return null;
+                },
+                scope:function(){
+                    return $scope;
                 }
             }
         });
@@ -169,7 +172,7 @@ KylinApp.controller('PageCtrl', function ($scope, $q, AccessService,$modal, $loc
 
 });
 
-var projCtrl = function ($scope, $modalInstance, ProjectService, MessageService, projects, project,SweetAlert) {
+var projCtrl = function ($scope, $modalInstance, ProjectService, MessageService, projects, project,SweetAlert,scope) {
     $scope.state = {
         isEdit: false,
         oldProjName: null
@@ -214,6 +217,7 @@ var projCtrl = function ($scope, $modalInstance, ProjectService, MessageService,
                 if(projects) {
                     projects.push(newProj);
                 }
+                scope.project.projects.push(newProj.name);
             }, function(e){
                 if(e.data&& e.data.exception){
                     var message =e.data.exception;

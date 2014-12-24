@@ -1,4 +1,4 @@
-<div>
+<section ng-show="selected" ng-class="{current: selected, done: completed}" class="step">
 <!-- Fact Table Name -->
 <div class="form-group">
     <div class="row">
@@ -356,4 +356,7 @@
     </div>
 </div>
 </ng-form>
-</div>
+
+<div class="row" ng-transclude=""></div>
+
+</section>

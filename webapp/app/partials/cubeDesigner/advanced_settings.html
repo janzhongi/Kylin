@@ -1,6 +1,6 @@
-<div>
+<section ng-show="selected" ng-class="{current: selected, done: completed}" class="step">
 
-    <div class="form-group">
+<div class="form-group">
 
         <table style="margin-left:42px; width:92%"
                class="table table-hover list">
@@ -156,4 +156,5 @@
                 ng-click="addNewRowkeyColumn()" ng-show="state.mode=='edit'">New Rowkey Column<i class="fa fa-plus"></i></button>
     </div>
 </div>
-
+    <div class="row" ng-transclude=""></div>
+</section>

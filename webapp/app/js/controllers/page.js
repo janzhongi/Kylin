@@ -131,7 +131,7 @@ KylinApp.controller('PageCtrl', function ($scope, $q, AccessService,$modal, $loc
         angular.forEach(projects, function(project, index){
             $scope.project.projects.push(project.name);
         });
-        $scope.project.projects.sort();
+        $scope.project.projects = _.sortBy($scope.project.projects, function (i) { return i.toLowerCase(); });
 
         var absUrl = $location.absUrl();
 

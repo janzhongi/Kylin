@@ -1,3 +1,4 @@
+<section ng-show="selected" ng-class="{current: selected, done: completed}" class="step">
 <div class="row">
     <div class="col-xs-8">
         <!--Cube Designer-->
@@ -44,3 +45,5 @@
         </div>
     </div>
 </div>
+    <div class="row" ng-transclude=""></div>
+</section>

@@ -1,7 +1,5 @@
-<section ng-show="selected" ng-class="{current: selected, done: completed}" class="step">
 <div class="row">
     <div class="col-xs-8">
-        <!--Project-->
         <div class="form-group">
             <div class="row">
                 <label class="col-xs-12 col-sm-3 control-label no-padding-right">
@@ -24,7 +22,7 @@
         <div class="form-group">
             <div class="row">
                 <label class="col-xs-12 col-sm-3 control-label no-padding-right font-color-default">
-                    <b>Cube Name</b>
+                    <b>Cube Name:{{currentStep}}{{sample.title}}</b>
                 </label>
                 <div class="col-xs-12 col-sm-6">
                     <input ng-if="state.mode=='edit'" name="cube_name" type="text" class="form-control"
@@ -92,4 +90,3 @@
         </div>
     </div>
 </div>
-</section>

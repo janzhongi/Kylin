@@ -1,22 +1,28 @@
 <div class="box box-primary">
     <div class="box-header widget-header-blue widget-header-flat">
-        <!--<h4 class="box-title text-info">Cube Designer</h4>-->
     </div>
     <div class="box-body wizard-wrapper">
-     <wizard on-finish="finishedWizard()"> 
-        <wz-step title="Cube Info" template="partials/cubeDesigner/info.html">
+     <wizard on-finish="" edit-mode="state.mode!='edit'">
+        <wz-step title="Cube Info">
+            <div ng-include src="'partials/cubeDesigner/info.html'"></div>
         </wz-step>
-        <wz-step title="Dimensions" template="partials/cubeDesigner/dimensions.html">
+        <wz-step title="Dimensions">
+            <div ng-include src="'partials/cubeDesigner/dimensions.html'"></div>
         </wz-step>
-        <wz-step title="Measures"  template="partials/cubeDesigner/measures.html">
+        <wz-step title="Measures">
+            <div ng-include src="'partials/cubeDesigner/measures.html'"></div>
         </wz-step>
-        <wz-step title="Filter"  template="partials/cubeDesigner/filter.html">
+        <wz-step title="Filter">
+            <div ng-include src="'partials/cubeDesigner/filter.html'"></div>
         </wz-step>
-        <wz-step title="Refresh Setting"  template="partials/cubeDesigner/incremental.html">
+        <wz-step title="Refresh Setting">
+            <div ng-include src="'partials/cubeDesigner/incremental.html'"></div>
         </wz-step>
-        <wz-step title="Advanced Setting"  template="partials/cubeDesigner/advanced_settings.html">
+        <wz-step title="Advanced Setting">
+            <div ng-include src="'partials/cubeDesigner/advanced_settings.html'"></div>
         </wz-step>
-        <wz-step title="Overview"  template="partials/cubeDesigner/overview.html">
+        <wz-step title="Overview">
+            <div ng-include src="'partials/cubeDesigner/overview.html'"></div>
         </wz-step>
 
          <hr/>

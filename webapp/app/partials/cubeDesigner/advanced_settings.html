@@ -1,31 +1,6 @@
-<section ng-show="selected" ng-class="{current: selected, done: completed}" class="step">
-
-<div class="form-group">
-
-        <table style="margin-left:42px; width:92%"
-               class="table table-hover list">
-            <tr>
-                <td>
-                    <!--Cube Size-->
-                    <div class="form-group" ng-show="userService.hasRole('ROLE_ADMIN')">
-                        <div class="row">
-                            <label class="control-label col-xs-12 col-sm-3 no-padding-right font-color-default"><b>Cube Size</b></label>
-                            <div class="col-xs-12 col-sm-6">
-                                <select class="form-control" ng-if="state.mode=='edit'" style="width: 360px;"
-                                        chosen ng-model="cubeMetaFrame.capacity" required
-                                        ng-options="cc as cc for cc in cubeCapacities">
-                                </select>
-                                <span ng-if="state.mode=='view'">{{cubeMetaFrame.capacity}}</span>
-                            </div>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        </table>
-
-    </div>
+<div>
     <div class="form-group">
-        <h4 style="margin-left:42px">Aggregation Groups</h4>
+        <h4 style="margin-left:42px">Aggreation Groups</h4>
         <table style="margin-left:42px; width:92%"
                ng-if="cubeMetaFrame.rowkey.aggregation_groups.length > 0"
                class="table table-hover list">
@@ -45,8 +20,9 @@
                     <select ng-if="state.mode=='edit'" style="width: 100%"
                             ng-model="aggregation_groups" required chosen multiple
                             ng-change="refreshAggregationGroup(cubeMetaFrame.rowkey.aggregation_groups, $index, aggregation_groups)"
-                            ng-options="rowkey_column.column as rowkey_column.column for rowkey_column in cubeMetaFrame.rowkey.rowkey_columns">
+                            ng-options="dimension.name as dimension.name for dimension in cubeMetaFrame.dimensions">
                     </select>
+
                     <p ng-if="state.mode=='view'" style="word-wrap: break-word; word-break: normal;max-width: 1000px ">{{aggregation_groups}}</p>
                 </td>
                 <td ng-if="state.mode=='edit'" class="col-xs-1">
@@ -87,7 +63,7 @@
                 </td>
                 <td>
                     <!--Column Name -->
-                    <input type="text" class="form-control" placeholder="Column Name.." ng-if="state.mode=='edit'"
+                    <input type="text" placeholder="Column Name.." ng-if="state.mode=='edit'"
                            tooltip="rowkey column name.." tooltip-trigger="focus"
                            ng-model="rowkey_column.column" class="form-control">
 
@@ -95,7 +71,7 @@
                 </td>
                 <td>
                     <!--Column Length -->
-                    <input type="text" class="form-control" placeholder="Column Length.." ng-if="state.mode=='edit'"
+                    <input type="text" placeholder="Column Length.." ng-if="state.mode=='edit'"
                            tooltip="rowkey column length.." tooltip-trigger="focus"
                            ng-model="rowkey_column.length" class="form-control">
 
@@ -104,10 +80,12 @@
                 <td>
                     <!--Use Dictionary-->
                     <div>
-                        <select ng-if="state.mode=='edit'" style="width:80px;"
+                        <select ng-if="state.mode=='edit'"
                                 chosen ng-model="rowkey_column.dictionary"
                                 ng-options="dt as dt for dt in dictionaries">
+                            <option value="">-- choose dictionary --</option>
                         </select>
+
                         <span ng-if="state.mode=='view'">{{rowkey_column.dictionary}}</span>
                     </div>
                 </td>
@@ -132,8 +110,8 @@
         </table>
 
         <button class="btn btn-sm btn-info" style="margin-left:42px"
-                ng-click="addNewRowkeyColumn()" ng-show="state.mode=='edit'">New Rowkey Column<i class="fa fa-plus"></i></button>
+                ng-click="addNewRowkeyColumn()" ng-show="state.mode=='edit'">New Rowkey
+            Column<i
+                    class="fa fa-plus"></i></button>
     </div>
 </div>
-    <div class="row" ng-transclude=""></div>
-</section>

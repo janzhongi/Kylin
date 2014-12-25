@@ -1,5 +1,4 @@
-<section ng-show="selected" ng-class="{current: selected, done: completed}" class="step">
-
+<div class="row">
 <div class="form-group">
 
         <table style="margin-left:42px; width:92%"
@@ -8,10 +7,10 @@
                 <td>
                     <!--Cube Size-->
                     <div class="form-group" ng-show="userService.hasRole('ROLE_ADMIN')">
-                        <div class="row">
+                        <div class="row"  id="cube-designer-cubesize">
                             <label class="control-label col-xs-12 col-sm-3 no-padding-right font-color-default"><b>Cube Size</b></label>
-                            <div class="col-xs-12 col-sm-6">
-                                <select class="form-control" ng-if="state.mode=='edit'" style="width: 360px;"
+                            <div class="col-xs-12 col-sm-6" >
+                                <select class="form-control" ng-if="state.mode=='edit'"
                                         ng-init="cubeMetaFrame.capacity = dftSelections.cubeCapacity"
                                         chosen ng-model="cubeMetaFrame.capacity" required
                                         ng-options="cc as cc for cc in cubeCapacities">
@@ -47,7 +46,7 @@
     </div>
     <div class="form-group">
         <h4 style="margin-left:42px">Aggregation Groups</h4>
-        <table style="margin-left:42px; width:92%"
+        <table style="margin-left:42px; width:92%" class="aggregation-group"
                ng-if="cubeMetaFrame.rowkey.aggregation_groups.length > 0"
                class="table table-hover list">
             <tr class="row">
@@ -61,7 +60,7 @@
                     <!-- ID -->
                     <b>{{($index + 1)}}</b>
                 </td>
-                <td class="col-xs-11">
+                <td class="col-xs-11" >
                     <!-- Dimensions -->
                     <select ng-if="state.mode=='edit'" style="width: 100%"
                             ng-model="aggregation_groups" required chosen multiple
@@ -124,7 +123,7 @@
                 </td>
                 <td>
                     <!--Use Dictionary-->
-                    <div>
+                    <div class="cube-dictionary">
                         <select ng-if="state.mode=='edit'" style="width:80px;"
                                 chosen ng-model="rowkey_column.dictionary"
                                 ng-options="dt as dt for dt in dictionaries">
@@ -156,5 +155,3 @@
                 ng-click="addNewRowkeyColumn()" ng-show="state.mode=='edit'">New Rowkey Column<i class="fa fa-plus"></i></button>
     </div>
 </div>
-    <div class="row" ng-transclude=""></div>
-</section>

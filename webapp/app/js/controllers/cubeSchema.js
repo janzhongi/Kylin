@@ -93,7 +93,6 @@ KylinApp.controller('CubeSchemaCtrl', function ($scope, QueryService, UserServic
 
     $scope.addNewDimension = function (dimension) {
 
-
         $scope.newDimension = (!!dimension)? dimension: Dimension.createNew();
         if(!$scope.newDimension.join){
             $scope.newDimension.join = { "type": "","primary_key": [],"foreign_key": []}

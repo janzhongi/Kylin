@@ -1,6 +1,14 @@
 'use strict';
 
 KylinApp.controller('WizardCubeSchemaCtrl', function ($scope, QueryService, UserService, ProjectService, AuthenticationService,SweetAlert,WizardHandler) {
+    //~ Define metadata & class
+    $scope.capacities = ['SMALL', 'MEDIUM', 'LARGE'];
+    $scope.cubePartitionTypes = ['APPEND', 'UPDATE_INSERT'];
+    $scope.projects = [];
+    $scope.newDimension = null;
+    $scope.newMeasure = null;
+
+
         $scope.finished = function() {
             alert("Wizard finished :)");
         }

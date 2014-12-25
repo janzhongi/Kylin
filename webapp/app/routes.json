@@ -33,7 +33,7 @@
     {
         "url": "/cubes/add",
         "params": {
-            "templateUrl": "partials/cubes/cube_edit.html",
+            "templateUrl": "partials/cubes/wizard_cube_edit.html",
             "tab": "cubes",
             "controller": "CubeEditCtrl"
         }
@@ -65,7 +65,7 @@
     {
         "url": "/cubes/edit/:cubeName",
         "params": {
-            "templateUrl": "partials/cubes/cube_edit.html",
+            "templateUrl": "partials/cubes/wizard_cube_edit.html",
             "tab": "cubes",
             "controller": "CubeEditCtrl"
         }

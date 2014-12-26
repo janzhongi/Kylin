@@ -2,7 +2,7 @@
     <div class="box-header widget-header-blue widget-header-flat">
     </div>
     <div class="box-body wizard-wrapper">
-     <wizard on-finish="" edit-mode="state.mode!='edit'">
+        <wizard on-finish="finished();" edit-mode="state.mode!='edit'" current-step="curWizardStep">
         <wz-step title="Cube Info">
             <div ng-include src="'partials/cubeDesigner/info.html'"></div>
         </wz-step>
@@ -27,27 +27,33 @@
 
          <hr/>
 
-         <div class="wizard-actions">
-             <div class="row">
-                 <div class="col-xs-8">
-                     <p style="color: #808080;text-align: left;"><b>Note:</b> inputs with <span style="color: lightblue">light blue</span> border are mandatory.</p>
-                     <div>
-                         <a href="/cubes" class="pull-left"><i class="fa fa-arrow-left"></i> Back to My Cubes</a>
+             <div class="wizard-actions">
+                 <div class="row">
+                     <div class="col-xs-8">
+                         <p style="color: #808080;text-align: left;"><b>Note:</b> inputs with <span style="color: lightblue">light blue</span> border are mandatory.</p>
+                         <div>
+                             <a href="/cubes" class="pull-left"><i class="fa fa-arrow-left"></i> Back to My Cubes</a>
+                         </div>
+                     </div>
+                     <div class="col-xs-4">
+
+
+                         <button class="btn btn-prev" wz-previous ng-show="curWizardStep!='Cube Info'"
+                             <i class="ace-icon fa fa-arrow-left"></i>
+                             Prev
+                         </button>
+                         <button id="nextButton" class="btn btn-success btn-next"  wz-next ng-disabled="design_form.$invalid"
+                                 ng-show="curWizardStep!='Overview'">
+                             Next
+                             <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+                         </button>
+                         <button  class="btn btn-primary" ng-click="prepareCube();saveCube(design_form)"
+                                 ng-if="curWizardStep=='Overview' && state.mode=='edit'">
+                             Save
+                         </button>
                      </div>
                  </div>
-                 <div class="col-xs-4">
-
-                     <input type="submit" class="btn btn-prev" wz-previous value="Prev" />
-
-                     <input type="submit" class="btn btn-primary" wz-next value="Next" />
-
-                     <!--<button class="btn btn-primary" ng-click="prepareCube();saveCube(design_form)" ng-disabled="design_form.$invalid"-->
-                             <!--ng-if="curStep.title=='Overview' && state.mode=='edit'">-->
-                         <!--Save-->
-                     <!--</button>-->
-                 </div>
              </div>
-         </div>
-    </wizard>
+        </wizard>
     </div>
 </div>

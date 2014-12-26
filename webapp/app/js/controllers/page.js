@@ -1,6 +1,6 @@
 'use strict';
 
-KylinApp.controller('PageCtrl', function ($scope, $q, AccessService,$modal, $location, $rootScope, $routeParams, $http, UserService,ProjectService,SweetAlert,$cookieStore,$log) {
+KylinApp.controller('PageCtrl', function ($scope, $q, AccessService,$modal, $location, $rootScope, $routeParams, $http, UserService,ProjectService,SweetAlert,$cookieStore,$log,ProjectModel) {
 
     $scope.header = {show: true};
     $scope.footer = {
@@ -18,6 +18,35 @@ KylinApp.controller('PageCtrl', function ($scope, $q, AccessService,$modal, $loc
     $scope.angular = angular;
     $scope.userService = UserService;
     $scope.activeTab = "";
+
+    $scope.project = {
+        projects:[],
+        selectedProject: null
+    };
+
+    //init
+    ProjectService.list({}, function (projects) {
+        var _projects = [];
+        angular.forEach(projects, function(project, index){
+            _projects.push(project.name);
+        });
+        _projects = _.sortBy(_projects, function (i) { return i.toLowerCase(); });
+
+        ProjectModel.setProjects(projects);
+        $scope.project.projects=_projects;
+
+        var absUrl = $location.absUrl();
+
+        var projectInCookie = $cookieStore.get("project");
+        if(absUrl.indexOf("/login")==-1){
+            $scope.project.selectedProject=projectInCookie!=null?projectInCookie:null;
+        }else{
+            $scope.project.selectedProject=$scope.project.selectedProject!=null?$scope.project.selectedProject:projectInCookie!=null?projectInCookie:$scope.project.projects[0];
+        }
+    });
+
+
+
 
     // Set up common methods
     $scope.logout = function () {
@@ -117,31 +146,6 @@ KylinApp.controller('PageCtrl', function ($scope, $q, AccessService,$modal, $loc
 
 
 
-    $scope.project = {
-        projects:[],
-        selectedProject: null
-    };
-
-    $scope.projectVisible = function(project){
-        $log.info(project);
-        return project!='-- Select All --';
-    }
-
-    ProjectService.list({}, function (projects) {
-        angular.forEach(projects, function(project, index){
-            $scope.project.projects.push(project.name);
-        });
-        $scope.project.projects = _.sortBy($scope.project.projects, function (i) { return i.toLowerCase(); });
-
-        var absUrl = $location.absUrl();
-
-        var projectInCookie = $cookieStore.get("project");
-        if(absUrl.indexOf("/login")==-1){
-            $scope.project.selectedProject=projectInCookie!=null?projectInCookie:null;
-        }else{
-            $scope.project.selectedProject=$scope.project.selectedProject!=null?$scope.project.selectedProject:projectInCookie!=null?projectInCookie:$scope.project.projects[0];
-        }
-    });
 
     $scope.toCreateProj = function () {
         $modal.open({

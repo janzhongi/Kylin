@@ -1,6 +1,8 @@
 'use strict';
 
 KylinApp.controller('CubeSchemaCtrl', function ($scope, QueryService, UserService, ProjectService, AuthenticationService,SweetAlert) {
+
+    $scope.curWizardStep;
     //~ Define metadata & class
     $scope.capacities = ['SMALL', 'MEDIUM', 'LARGE'];
     $scope.cubePartitionTypes = ['APPEND', 'UPDATE_INSERT'];

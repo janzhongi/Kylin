@@ -7,6 +7,7 @@ KylinApp.controller('WizardCubeSchemaCtrl', function ($scope, QueryService, User
     $scope.projects = [];
     $scope.newDimension = null;
     $scope.newMeasure = null;
+    $scope.curWizardStep = 0;
 
 
         $scope.finished = function() {

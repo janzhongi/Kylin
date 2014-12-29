@@ -5,13 +5,13 @@ KylinApp.service('ProjectModel',function(){
 
 
     this.setSelectedProject = function(project) {
-        if(this.list.indexOf(project) > -1) {
+        if(this.projects.indexOf(project) > -1) {
             this.selectedProject = project;
         }
     };
 
     this.setProjects = function(projects){
-        if(!projects.length){
+        if(projects.length){
             this.projects = projects;
         }
     }

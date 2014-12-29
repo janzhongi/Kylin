@@ -1,14 +1,18 @@
 'use strict';
 
 KylinApp
-    .controller('CubesCtrl', function ($scope, $q, $routeParams, $location, $modal, MessageService, CubeDescService, CubeService, JobService, UserService,  ProjectService,SweetAlert,loadingRequest,$log) {
+    .controller('CubesCtrl', function ($scope, $q, $routeParams, $location, $modal, MessageService, CubeDescService, CubeService, JobService, UserService,  ProjectService,SweetAlert,loadingRequest,$log,ProjectModel) {
         $scope.listParams={
             cubeName: $routeParams.cubeName,
             projectName: $routeParams.projectName
         };
         if($routeParams.projectName){
             $scope.project.selectedProject = $routeParams.projectName;
+            ProjectModel.setSelectedProject($routeParams.projectName);
         }
+
+        // $scope.projectModel = ProjectModel;
+
         $scope.cubes = [];
         $scope.loading = false;
         $scope.action = {};

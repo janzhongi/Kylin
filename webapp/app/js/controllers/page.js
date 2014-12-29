@@ -18,12 +18,12 @@ KylinApp.controller('PageCtrl', function ($scope, $q, AccessService,$modal, $loc
     $scope.angular = angular;
     $scope.userService = UserService;
     $scope.activeTab = "";
-
+    $scope.projectModel = ProjectModel;
     $scope.project = {
         projects:[],
         selectedProject: null
     };
-
+    
     //init
     ProjectService.list({}, function (projects) {
         var _projects = [];
@@ -32,16 +32,17 @@ KylinApp.controller('PageCtrl', function ($scope, $q, AccessService,$modal, $loc
         });
         _projects = _.sortBy(_projects, function (i) { return i.toLowerCase(); });
 
-        ProjectModel.setProjects(projects);
-        $scope.project.projects=_projects;
+        ProjectModel.setProjects(_projects);
 
         var absUrl = $location.absUrl();
 
         var projectInCookie = $cookieStore.get("project");
         if(absUrl.indexOf("/login")==-1){
-            $scope.project.selectedProject=projectInCookie!=null?projectInCookie:null;
+            var selectedProject=projectInCookie!=null?projectInCookie:null;
+            ProjectModel.setSelectedProject(selectedProject);
         }else{
-            $scope.project.selectedProject=$scope.project.selectedProject!=null?$scope.project.selectedProject:projectInCookie!=null?projectInCookie:$scope.project.projects[0];
+            var selectedProject=$scope.project.selectedProject!=null?$scope.project.selectedProject:projectInCookie!=null?projectInCookie:$scope.project.projects[0];
+            ProjectModel.setSelectedProject(selectedProject);
         }
     });
 

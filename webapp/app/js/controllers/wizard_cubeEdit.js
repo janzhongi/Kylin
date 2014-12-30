@@ -383,9 +383,6 @@ KylinApp.controller('WizardCubeEditCtrl', function ($scope, $q, $routeParams, $l
             }
             groups[j].push(groupItems[i]);
         }
-//        if(groups[groups.length-1].length<10){
-//            groups.pop();
-//        }
         return groups;
     }
 
@@ -462,4 +459,7 @@ KylinApp.controller('WizardCubeEditCtrl', function ($scope, $q, $routeParams, $l
             reGenerateRowKey();
         }
     });
+
+
+
 });

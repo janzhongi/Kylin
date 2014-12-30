@@ -255,6 +255,16 @@ KylinApp.controller('WizardCubeSchemaCtrl', function ($scope, QueryService, User
         return tooltip;
     }
 
+
+    // wizard validateion
+
+    $scope.cubeInfoValidation = function(){
+        $log.info("cube info validation");
+        return false;
+    }
+
+
+
     // ~ private methods
     function initProject() {
         ProjectService.list({}, function (projects) {

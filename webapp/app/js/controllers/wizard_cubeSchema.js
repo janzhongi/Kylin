@@ -1,15 +1,11 @@
 
-KylinApp.controller('WizardCubeSchemaCtrl', function ($scope, QueryService, UserService, ProjectService, AuthenticationService,SweetAlert,WizardHandler) {
+KylinApp.controller('WizardCubeSchemaCtrl', function ($scope, QueryService, UserService, ProjectService, AuthenticationService,SweetAlert,WizardHandler,$log) {
     //~ Define metadata & class
     $scope.projects = [];
     $scope.newDimension = null;
     $scope.newMeasure = null;
     $scope.curWizardStep = 0;
 
-
-        $scope.finished = function() {
-            alert("Wizard finished :)");
-        }
 
         $scope.logStep = function() {
             console.log("Step continued");
@@ -263,6 +259,30 @@ KylinApp.controller('WizardCubeSchemaCtrl', function ($scope, QueryService, User
         return false;
     }
 
+
+    $scope.validateCubeInfo = function(){
+        $log.info("validate cube info");
+    }
+
+    $scope.validateDemensions = function(){
+
+    }
+
+    $scope.validateMeasures = function(){
+
+    }
+
+    $scope.validateFilter = function(){
+
+    }
+
+    $scope.validateRefreshSetting = function(){
+
+    }
+
+    $scope.validateAdvancedSetting = function(){
+
+    }
 
 
     // ~ private methods

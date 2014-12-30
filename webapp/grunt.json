@@ -37,7 +37,7 @@
                 "app/components/angular-sweetalert/SweetAlert.js",
                 "app/components/underscore/underscore.js",
                 "app/components/angular-underscore/angular-underscore.js",
-                "app/components/angular-wizard/dist/angular-wizard.js"
+                "app/components/angular-wizard/dist/angular-wizard.js",
                 "tmp/js/scripts.js"
             ],
             "dest": "tmp/js/scripts.min.js"

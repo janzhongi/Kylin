@@ -126,7 +126,7 @@
                             <div class="col-xs-12 col-sm-6">
                                 <select class="form-control" ng-if="state.mode=='edit'"
                                         chosen ng-model="string"
-                                        ng-options="ddt as ddt for ddt in dimensionDataTypes">
+                                        ng-options="ddt as ddt for ddt in cubeConfig.dimensionDataTypes">
                                     <option value="">-- Select a Data Type --</option>
                                 </select>
                             </div>
@@ -193,7 +193,7 @@
                                             <label class="col-sm-3 control-label font-color-default"><b>Type</b></label>
                                             <div class="col-sm-6">
                                                 <select class="form-control" chosen ng-model="newDimension.join.type"
-                                                    ng-options="joinType.value as joinType.name for joinType in joinTypes">
+                                                    ng-options="joinType.value as joinType.name for joinType in cubeConfig.joinTypes">
                                                 </select>
                                             </div>
                                         </div>

@@ -11,9 +11,9 @@
                             <label class="control-label col-xs-12 col-sm-3 no-padding-right font-color-default"><b>Cube Size</b></label>
                             <div class="col-xs-12 col-sm-6" >
                                 <select class="form-control" ng-if="state.mode=='edit'"
-                                        ng-init="cubeMetaFrame.capacity = dftSelections.cubeCapacity"
+                                        ng-init="cubeMetaFrame.capacity = cubeConfig.dftSelections.cubeCapacity"
                                         chosen ng-model="cubeMetaFrame.capacity" required
-                                        ng-options="cc as cc for cc in cubeCapacities">
+                                        ng-options="cc as cc for cc in cubeConfig.cubeCapacities">
                                 </select>
                                 <span ng-if="state.mode=='view'">{{cubeMetaFrame.capacity}}</span>
                             </div>
@@ -30,10 +30,10 @@
                             <label class="control-label col-xs-12 col-sm-3 no-padding-right font-color-default"><b>Query Priority</b></label>
                             <div class="col-xs-12 col-sm-3">
                                 <select class="form-control" style="width: 360px;"
-                                        ng-init="cubeMetaFrame.cost = dftSelections.queryPriority.value"
+                                        ng-init="cubeMetaFrame.cost = cubeConfig.dftSelections.queryPriority.value"
                                         ng-if="state.mode=='edit'"
                                         chosen ng-model="cubeMetaFrame.cost" required
-                                        ng-options="qp.value as qp.name for qp in queryPriorities">
+                                        ng-options="qp.value as qp.name for qp in cubeConfig.queryPriorities">
                                 </select>
                                 <span ng-if="state.mode=='view'">{{cubeMetaFrame.cost}}</span>
                             </div>
@@ -126,7 +126,7 @@
                     <div class="cube-dictionary">
                         <select ng-if="state.mode=='edit'" style="width:80px;"
                                 chosen ng-model="rowkey_column.dictionary"
-                                ng-options="dt as dt for dt in dictionaries">
+                                ng-options="dt as dt for dt in cubeConfig.dictionaries">
                         </select>
                         <span ng-if="state.mode=='view'">{{rowkey_column.dictionary}}</span>
                     </div>

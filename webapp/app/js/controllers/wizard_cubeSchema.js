@@ -1,9 +1,6 @@
-'use strict';
 
 KylinApp.controller('WizardCubeSchemaCtrl', function ($scope, QueryService, UserService, ProjectService, AuthenticationService,SweetAlert,WizardHandler) {
     //~ Define metadata & class
-    $scope.capacities = ['SMALL', 'MEDIUM', 'LARGE'];
-    $scope.cubePartitionTypes = ['APPEND', 'UPDATE_INSERT'];
     $scope.projects = [];
     $scope.newDimension = null;
     $scope.newMeasure = null;
@@ -92,8 +89,6 @@ KylinApp.controller('WizardCubeSchemaCtrl', function ($scope, QueryService, User
     }
 
     $scope.addNewDimension = function (dimension) {
-
-
         $scope.newDimension = (!!dimension)? dimension: Dimension.createNew();
         if(!$scope.newDimension.join){
             $scope.newDimension.join = { "type": "","primary_key": [],"foreign_key": []}

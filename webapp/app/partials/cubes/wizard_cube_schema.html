@@ -3,7 +3,7 @@
     </div>
     <div class="box-body wizard-wrapper">
         <wizard on-finish="finished();" edit-mode="state.mode!='edit'" current-step="curWizardStep">
-        <wz-step title="Cube Info">
+        <wz-step title="Cube Info"  canexit="finished">
             <div ng-include src="'partials/cubeDesigner/info.html'"></div>
         </wz-step>
         <wz-step title="Dimensions">

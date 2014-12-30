@@ -59,7 +59,7 @@
         "params": {
             "templateUrl": "partials/cubes/cube_json_edit.html",
             "tab": "cubes",
-            "controller": "CubeEditCtrl"
+            "controller": "WizardCubeEditCtrl"
         }
     },
     {
@@ -67,7 +67,7 @@
         "params": {
             "templateUrl": "partials/cubes/wizard_cube_edit.html",
             "tab": "cubes",
-            "controller": "CubeEditCtrl"
+            "controller": "WizardCubeEditCtrl"
         }
     },
     {

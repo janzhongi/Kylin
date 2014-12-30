@@ -52,7 +52,7 @@ KylinApp
             $scope.loading = true;
             var param = {
                 ext: true,
-                project:$scope.project.selectedProject
+                project:$scope.projectModel.selectedProject
             };
             if (forceLoad)
             {

@@ -1,6 +1,7 @@
 'use strict';
 
 KylinApp.controller('LoginCtrl', function ($scope, $rootScope, $location, $base64, AuthenticationService, UserService) {
+
     $scope.username = null;
     $scope.password = null;
     $scope.loading = false;
@@ -10,7 +11,7 @@ KylinApp.controller('LoginCtrl', function ($scope, $rootScope, $location, $base6
         httpHeaders.common['Authorization'] = 'Basic ' + $base64.encode($scope.username + ':' + $scope.password);
         $scope.loading = true;
         //verify project
-        if($scope.project.projects.length&&!$scope.project.selectedProject){
+        if($scope.projectModel.projects.length&&!$scope.projectModel.selectedProject){
             $scope.loading = false;
             $scope.error = "Unable to login, please select a project";
             return;

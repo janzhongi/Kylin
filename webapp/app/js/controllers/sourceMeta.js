@@ -96,7 +96,7 @@ KylinApp
             return defer.promise;
         };
 
-        $scope.$watch('project.selectedProject', function (newValue, oldValue) {
+        $scope.$watch('projectModel.selectedProject', function (newValue, oldValue) {
 //         will load table when enter this page,null or not
         $scope.aceSrcTbLoaded();
 
@@ -137,7 +137,7 @@ KylinApp
                       return $scope.tableNames;
                     },
                     projectName:function(){
-                      return  $scope.project.selectedProject;
+                      return  $scope.projectModel.selectedProject;
                     },
                     hiveTbLoad:function(){
                       return $scope.hiveTbLoad;

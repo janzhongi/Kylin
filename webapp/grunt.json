@@ -36,6 +36,7 @@
                 "app/components/bootstrap-sweetalert/lib/sweet-alert.js",
                 "app/components/angular-sweetalert/SweetAlert.js",
                 "app/components/underscore/underscore.js",
+                "app/components/underscore.string/dist/underscore.string.min.js",
                 "app/components/angular-underscore/angular-underscore.js",
                 "app/components/angular-wizard/dist/angular-wizard.js",
                 "tmp/js/scripts.js"

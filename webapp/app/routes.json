@@ -35,11 +35,11 @@
         "params": {
             "templateUrl": "partials/cubes/wizard_cube_edit.html",
             "tab": "cubes",
-            "controller": "CubeEditCtrl"
+            "controller": "WizardCubeEditCtrl"
         }
     },
     {
-        "url": "/cubes/wizard",
+        "url": "/cubes/editwizard/:cubeName",
         "params": {
             "templateUrl": "partials/cubes/wizard_cube_edit.html",
             "tab": "cubes",

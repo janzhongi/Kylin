@@ -100,7 +100,7 @@ KylinApp.directive('kylinPagination', function ($parse, $q) {
             }
         };
     })
-    .directive('typeahead', function ($timeout, $filter) {
+    .directive('_typeahead', function ($timeout, $filter) {
         return {
             restrict: 'AEC',
             scope: {

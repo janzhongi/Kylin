@@ -79,6 +79,7 @@ KylinApp.controller('WizardCubeSchemaCtrl', function ($scope, QueryService, User
         }
     });
 
+
     // ~ public methods
     $scope.filterProj = function(project){
         return $scope.userService.hasRole('ROLE_ADMIN') || $scope.hasPermission(project,$scope.permissions.ADMINISTRATION.mask);
@@ -252,36 +253,65 @@ KylinApp.controller('WizardCubeSchemaCtrl', function ($scope, QueryService, User
     }
 
 
-    // wizard validateion
-
-    $scope.cubeInfoValidation = function(){
-        $log.info("cube info validation");
-        return false;
+    $scope.forms = {};
+    $scope.cubeValidate={
+        dimension:{
+            empty:false
+        }
     }
 
+    // wizard validateion
 
     $scope.validateCubeInfo = function(){
-        $log.info("validate cube info");
+
+
+        $log.info("validate cube info:"+$scope.forms);
+        var cube_name = $scope.cubeMetaFrame.name;
+        if($scope.forms.cubeInfoForm.$invalid){
+            $scope.forms.cubeInfoForm.cube_name.$dirty = true;
+            return false;
+        }
+        return true;
+
     }
 
     $scope.validateDemensions = function(){
 
+        var factTableValid = true;
+        var dimensionLengthValid = true;
+        if(!$scope.cubeMetaFrame.dimensions.length){
+            dimensionLengthValid =  false;
+        }
+
+        if($scope.forms.dimensionForm.$invalid){
+            $scope.forms.dimensionForm.factTable.$dirty = true;
+            if($scope.forms.dimensionForm.dimensionTable){
+                $scope.forms.dimensionForm.dimensionTable.$dirty = true;
+                $scope.forms.dimensionForm.dim_name.$dirty = true;
+            }
+            factTableValid =  false;
+        }
+        return dimensionLengthValid&&factTableValid;
     }
 
     $scope.validateMeasures = function(){
-
+        var measureLengthValid = true;
+        if(!$scope.cubeMetaFrame.measures.length){
+            measureLengthValid =  false;
+        }
+        return measureLengthValid;
     }
 
     $scope.validateFilter = function(){
-
+        return true;
     }
 
     $scope.validateRefreshSetting = function(){
-
+        return true;
     }
 
     $scope.validateAdvancedSetting = function(){
-
+        return true;
     }
 
 

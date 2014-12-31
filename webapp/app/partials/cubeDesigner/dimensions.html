@@ -1,14 +1,21 @@
 <div>
 <!-- Fact Table Name -->
-<div class="form-group">
+<form name="forms.dimensionForm" novalidate>
+<div class="form-group required">
     <div class="row">
         <label class="col-xs-12 col-sm-2 control-label no-padding-right font-color-default">
             <b>Fact Table</b>
         </label>
         <div class="col-xs-12 col-sm-6">
-            <typeahead ng-if="state.mode=='edit'" items="srcTablesInProject" prompt="Fact Table Name.."
-                       title="name" model="cubeMetaFrame.fact_table" required="true"></typeahead>
+            <input required ng-if="state.mode=='edit'" placeholder="Fact Table Name.." name="factTable" type="text" ng-model="cubeMetaFrame.fact_table" placeholder="" typeahead="item.name as item.name for item in srcTablesInProject "  class="form-control">
             <span ng-if="state.mode=='view'">{{cubeMetaFrame.fact_table}}</span>
+        </div>
+        <div class="col-xs-12 col-sm-3">
+                        <span  ng-show="forms.dimensionForm.factTable.$dirty && forms.dimensionForm.factTable.$invalid">
+                            <span class="text-danger" ng-show="forms.dimensionForm.factTable.$error.required">
+                                Please input fact table.
+                            </span>
+                        </span>
         </div>
     </div>
 </div>
@@ -88,13 +95,23 @@
 
 <!-- New Dimension Button -->
 <div class="form-group">
-    <button id="dimButton" class="btn btn-sm btn-info" ng-click="addNewDimension()" ng-show="state.mode=='edit' && !newDimension">
-        <i class="fa fa-plus"></i> Dimension
-    </button>
+    <div class="row" ng-show="state.mode=='edit' && !newDimension">
+        <div class="col-xs-12 col-sm-2">
+            <button id="dimButton" class="btn btn-sm btn-info" ng-click="addNewDimension()" >
+                <i class="fa fa-plus"></i> Dimension
+            </button>
+       </div>
+        <div class="col-xs-12 col-sm-3" ng-show="!cubeMetaFrame.dimensions.length">
+               <span>
+                   <span class="text-danger">
+                       Note: dimension info is required.
+                   </span>
+                </span>
+        </div>
+    </div>
 </div>
 
 <!-- Edit Dimension Form -->
-<ng-form name="edit_dim_form">
 <div class="box box-solid" ng-if="newDimension">
     <div class="box-header">
         <h4 class="box-title lighter">Edit Dimension</h4>
@@ -103,7 +120,7 @@
         <div class="row">
             <div class="col-xs-8">
                 <!--Name-->
-                    <div class="form-group">
+                    <div class="form-group required">
                         <div class="row">
                             <label class="col-xs-12 col-sm-3 control-label no-padding-right font-color-default"><b>Name</b></label>
                             <div class="col-xs-12 col-sm-6">
@@ -112,15 +129,15 @@
                                        ng-model="newDimension.name" required ng-if="state.mode=='edit'" />
                             </div>
                             <div class="col-xs-12 col-sm-3">
-                                <div class="text-warning" ng-if="edit_dim_form.dim_name.$error.required  && edit_dim_form.dim_name.$dirty">
-                                    The Dimension Name is required.
+                                <div class="text-danger" ng-if="forms.dimensionForm.dim_name.$error.required  && forms.dimensionForm.dim_name.$dirty">
+                                    Please input dimension name.
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!--Data Type-->
-                    <div class="form-group" ng-if="state.mode=='edit'" ng-hide="true">
+                    <div class="form-group " ng-if="state.mode=='edit'" ng-hide="true">
                         <div class="row">
                             <label class="control-label col-xs-12 col-sm-3 no-padding-right font-color-default"><b>Data Type</b></label>
                             <div class="col-xs-12 col-sm-6">
@@ -134,12 +151,16 @@
                     </div>
 
                     <!--Table Name-->
-                    <div class="form-group">
+                    <div class="form-group required">
                         <div class="row">
                             <label class="control-label col-xs-12 col-sm-3 no-padding-right font-color-default"><b>Table Name</b></label>
                             <div class="col-xs-12 col-sm-6">
-                                <typeahead ng-if="state.mode=='edit'" items="srcTablesInProject"
-                                           prompt="Table Name.." title="name" model="newDimension.table" required="true"></typeahead>
+                                  <input required ng-if="state.mode=='edit'" name="dimensionTable" type="text" ng-model="newDimension.table" placeholder="Table Name.." typeahead="item.name as item.name for item in srcTablesInProject "  class="form-control">
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
+                                <div class="text-danger" ng-if="forms.dimensionForm.dimensionTable.$error.required  && forms.dimensionForm.dimensionTable.$dirty">
+                                    Please input table name.
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -149,8 +170,7 @@
                         <div class="row">
                             <label class="control-label col-xs-12 col-sm-3 no-padding-right font-color-default"><b>Column Name</b></label>
                             <div class="col-xs-12 col-sm-6">
-                                <typeahead ng-if="state.mode=='edit'" style="width: 70%" items="getColumnsByTable(newDimension.table)"
-                                           prompt="Column Name.." title="name" model="newDimension.column" required="false"></typeahead>
+                                <input  ng-if="state.mode=='edit'" name="dimensionColumn" type="text" ng-model="newDimension.column" placeholder="Column Name.." typeahead="item.name as item.name for item in getColumnsByTable(newDimension.table) "  class="form-control">
                             </div>
                         </div>
                     </div>
@@ -350,10 +370,10 @@
         </div>
     </div>
     <div class="box-footer">
-        <button class="btn btn-sm btn-info" ng-disabled="edit_dim_form.$invalid"
+        <button class="btn btn-sm btn-info" ng-disabled="forms.dimensionForm.$invalid"
                 ng-click="saveNewDimension()" ng-show="state.mode=='edit'">OK</button>
         <button class="btn btn-link" ng-click="clearNewDimension()">Cancel</button>
     </div>
 </div>
-</ng-form>
+</form>
 </div>

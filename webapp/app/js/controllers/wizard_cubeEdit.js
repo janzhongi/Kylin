@@ -8,7 +8,7 @@ KylinApp.controller('WizardCubeEditCtrl', function ($scope, $q, $routeParams, $l
 
     //add or edit ?
     var absUrl = $location.absUrl();
-    $scope.cubeMode = absUrl.indexOf("/cubes/wizard")!=-1?'addNewCube':absUrl.indexOf("/cubes/edit")!=-1?'editExistCube':'default';
+    $scope.cubeMode = absUrl.indexOf("/cubes/add")!=-1?'addNewCube':absUrl.indexOf("/cubes/editwizard")!=-1?'editExistCube':'default';
     // use this flag to listen when rm or add dimension edited,used in sub-controller cube-schema
     $scope.editFlag ={
         dimensionEdited:"init"
@@ -106,7 +106,7 @@ KylinApp.controller('WizardCubeEditCtrl', function ($scope, $q, $routeParams, $l
         return $interpolate($templateCache.get(tmpl))(notification);
     };
 
-    $scope.saveCube = function (design_form) {
+    $scope.saveCube = function () {
 
         try {
             angular.fromJson($scope.state.cubeSchema);
@@ -133,9 +133,9 @@ KylinApp.controller('WizardCubeEditCtrl', function ($scope, $q, $routeParams, $l
                             $scope.state.cubeSchema = request.cubeDescData;
                             MessageService.sendMsg($scope.cubeResultTmpl({'text':'Updated the cube successfully.',type:'success'}), 'success', {}, true, 'top_center');
 
-                            if (design_form) {
-                                design_form.$invalid = true;
-                            }
+//                            if (design_form) {
+//                                design_form.$invalid = true;
+//                            }
                         } else {
                             $scope.cubeMetaFrame.project = $scope.state.project;
                                 var message =request.message;

@@ -12,7 +12,7 @@
         </div>
         <div class="col-xs-12 col-sm-3">
                         <span  ng-show="forms.dimensionForm.factTable.$dirty && forms.dimensionForm.factTable.$invalid">
-                            <span class="text-danger" ng-show="forms.dimensionForm.factTable.$error.required">
+                            <span class="error-tip" ng-show="forms.dimensionForm.factTable.$error.required">
                                 Please input fact table.
                             </span>
                         </span>
@@ -103,7 +103,7 @@
        </div>
         <div class="col-xs-12 col-sm-3" ng-show="!cubeMetaFrame.dimensions.length">
                <span>
-                   <span class="text-danger">
+                   <span class="error-tip">
                        Note: dimension info is required.
                    </span>
                 </span>
@@ -129,7 +129,7 @@
                                        ng-model="newDimension.name" required ng-if="state.mode=='edit'" />
                             </div>
                             <div class="col-xs-12 col-sm-3">
-                                <div class="text-danger" ng-if="forms.dimensionForm.dim_name.$error.required  && forms.dimensionForm.dim_name.$dirty">
+                                <div class="error-tip" ng-if="forms.dimensionForm.dim_name.$error.required  && forms.dimensionForm.dim_name.$dirty">
                                     Please input dimension name.
                                 </div>
                             </div>
@@ -158,7 +158,7 @@
                                   <input required ng-if="state.mode=='edit'" name="dimensionTable" type="text" ng-model="newDimension.table" placeholder="Table Name.." typeahead="item.name as item.name for item in srcTablesInProject "  class="form-control">
                             </div>
                             <div class="col-xs-12 col-sm-3">
-                                <div class="text-danger" ng-if="forms.dimensionForm.dimensionTable.$error.required  && forms.dimensionForm.dimensionTable.$dirty">
+                                <div class="error-tip" ng-if="forms.dimensionForm.dimensionTable.$error.required  && forms.dimensionForm.dimensionTable.$dirty">
                                     Please input table name.
                                 </div>
                             </div>

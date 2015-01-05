@@ -10,7 +10,7 @@ KylinApp.constant('cubeConfig', {
     measureParamType : ['column', 'constant'],
     measureExpressions : ['SUM', 'MIN', 'MAX', 'COUNT', 'COUNT_DISTINCT'],
     dimensionDataTypes : ["string", "tinyint", "int", "bigint", "date"],
-    cubeCapacities : ["MEDIUM", "SMALL", "LARGE"],
+    cubeCapacities : ["SMALL", "MEDIUM","LARGE"],
     cubePartitionTypes : ['APPEND', 'UPDATE_INSERT'],
     joinTypes : [
         {name: 'Left', value: 'left'},

@@ -35,10 +35,10 @@
                     </div>
                     <div class="col-xs-12 col-sm-3">
                         <span style="color:red" ng-show="forms.cubeInfoForm.cube_name.$dirty && forms.cubeInfoForm.cube_name.$invalid">
-                            <span class="text-danger" ng-show="forms.cubeInfoForm.cube_name.$error.required">
+                            <span class="error-tip" ng-show="forms.cubeInfoForm.cube_name.$error.required">
                                 Please input cube name.
                             </span>
-                            <span class="text-danger" ng-show="forms.cubeInfoForm.cube_name.$invalid && !forms.cubeInfoForm.cube_name.$error.required">
+                            <span class="error-tip" ng-show="forms.cubeInfoForm.cube_name.$invalid && !forms.cubeInfoForm.cube_name.$error.required">
                                 The cube name is invalid.You can use letters,numbers,and '_'
                             </span>
                         </span>

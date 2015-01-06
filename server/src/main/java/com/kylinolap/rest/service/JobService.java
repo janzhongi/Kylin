@@ -57,6 +57,7 @@ public class JobService extends BasicService {
         Integer limit = (null == limitValue) ? 30 : limitValue;
         Integer offset = (null == offsetValue) ? 0 : offsetValue;
         List<JobInstance> jobs = listAllJobs(cubeName, projectName, statusList);
+        
         Collections.sort(jobs);
 
         if (jobs.size() <= offset) {

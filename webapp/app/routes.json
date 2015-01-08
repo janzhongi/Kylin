@@ -33,17 +33,17 @@
     {
         "url": "/cubes/add",
         "params": {
-            "templateUrl": "partials/cubes/wizard_cube_edit.html",
+            "templateUrl": "partials/cubes/cube_edit.html",
             "tab": "cubes",
-            "controller": "WizardCubeEditCtrl"
+            "controller": "CubeEditCtrl"
         }
     },
     {
-        "url": "/cubes/editwizard/:cubeName",
+        "url": "/cubes/edit/:cubeName",
         "params": {
-            "templateUrl": "partials/cubes/wizard_cube_edit.html",
+            "templateUrl": "partials/cubes/cube_edit.html",
             "tab": "cubes",
-            "controller": "WizardCubeEditCtrl"
+            "controller": "CubeEditCtrl"
         }
     },    
     {
@@ -59,15 +59,7 @@
         "params": {
             "templateUrl": "partials/cubes/cube_json_edit.html",
             "tab": "cubes",
-            "controller": "WizardCubeEditCtrl"
-        }
-    },
-    {
-        "url": "/cubes/edit/:cubeName",
-        "params": {
-            "templateUrl": "partials/cubes/wizard_cube_edit.html",
-            "tab": "cubes",
-            "controller": "WizardCubeEditCtrl"
+            "controller": "CubeEditCtrl"
         }
     },
     {

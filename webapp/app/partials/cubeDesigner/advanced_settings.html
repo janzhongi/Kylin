@@ -1,5 +1,5 @@
 <div>
-<div class="form-group">
+    <div class="form-group">
 
         <table style="margin-left:42px; width:92%"
                class="table table-hover list">
@@ -9,8 +9,8 @@
                     <div class="form-group" ng-show="userService.hasRole('ROLE_ADMIN')">
                         <div class="row"  id="cube-designer-cubesize">
                             <label class="control-label col-xs-12 col-sm-3 no-padding-right font-color-default"><b>Cube Size</b></label>
-                            <div class="col-xs-12 col-sm-6" >
-                                <select class="form-control" ng-if="state.mode=='edit'"
+                            <div class="col-xs-12 col-sm-6">
+                                <select class="form-control" ng-if="state.mode=='edit'" style="width: 360px;"
                                         chosen ng-model="cubeMetaFrame.capacity" required
                                         ng-options="cc as cc for cc in cubeConfig.cubeCapacities">
                                 </select>
@@ -20,32 +20,12 @@
                     </div>
                 </td>
             </tr>
-            <!--hidde-->
-            <tr class="hidden">
-                <td>
-                    <!--Query Priority-->
-                    <div class="form-group" ng-show="userService.hasRole('ROLE_ADMIN')">
-                        <div class="row">
-                            <label class="control-label col-xs-12 col-sm-3 no-padding-right font-color-default"><b>Query Priority</b></label>
-                            <div class="col-xs-12 col-sm-3">
-                                <select class="form-control" style="width: 360px;"
-                                        ng-init="cubeMetaFrame.cost = cubeConfig.dftSelections.queryPriority.value"
-                                        ng-if="state.mode=='edit'"
-                                        chosen ng-model="cubeMetaFrame.cost" required
-                                        ng-options="qp.value as qp.name for qp in cubeConfig.queryPriorities">
-                                </select>
-                                <span ng-if="state.mode=='view'">{{cubeMetaFrame.cost}}</span>
-                            </div>
-                        </div>
-                    </div>
-                </td>
-            </tr>
         </table>
 
     </div>
     <div class="form-group">
-        <h4 style="margin-left:42px">Aggreation Groups</h4>
-        <table style="margin-left:42px; width:92%"
+        <h4 style="margin-left:42px">Aggregation Groups</h4>
+        <table style="margin-left:42px; width:92%" class="aggregation-group"
                ng-if="cubeMetaFrame.rowkey.aggregation_groups.length > 0"
                class="table table-hover list">
             <tr class="row">
@@ -59,14 +39,13 @@
                     <!-- ID -->
                     <b>{{($index + 1)}}</b>
                 </td>
-                <td class="col-xs-11">
+                <td class="col-xs-11" >
                     <!-- Dimensions -->
                     <select ng-if="state.mode=='edit'" style="width: 100%"
                             ng-model="aggregation_groups" required chosen multiple
                             ng-change="refreshAggregationGroup(cubeMetaFrame.rowkey.aggregation_groups, $index, aggregation_groups)"
-                            ng-options="dimension.name as dimension.name for dimension in cubeMetaFrame.dimensions">
+                            ng-options="rowkey_column.column as rowkey_column.column for rowkey_column in cubeMetaFrame.rowkey.rowkey_columns">
                     </select>
-
                     <p ng-if="state.mode=='view'" style="word-wrap: break-word; word-break: normal;max-width: 1000px ">{{aggregation_groups}}</p>
                 </td>
                 <td ng-if="state.mode=='edit'" class="col-xs-1">
@@ -107,7 +86,7 @@
                 </td>
                 <td>
                     <!--Column Name -->
-                    <input type="text" placeholder="Column Name.." ng-if="state.mode=='edit'"
+                    <input type="text" class="form-control" placeholder="Column Name.." ng-if="state.mode=='edit'"
                            tooltip="rowkey column name.." tooltip-trigger="focus"
                            ng-model="rowkey_column.column" class="form-control">
 
@@ -115,7 +94,7 @@
                 </td>
                 <td>
                     <!--Column Length -->
-                    <input type="text" placeholder="Column Length.." ng-if="state.mode=='edit'"
+                    <input type="text" class="form-control" placeholder="Column Length.." ng-if="state.mode=='edit'"
                            tooltip="rowkey column length.." tooltip-trigger="focus"
                            ng-model="rowkey_column.length" class="form-control">
 
@@ -123,14 +102,11 @@
                 </td>
                 <td>
                     <!--Use Dictionary-->
-                    <div>
-                        <select ng-if="state.mode=='edit'"
+                    <div class="cube-dictionary">
+                        <select ng-if="state.mode=='edit'" style="width:80px;"
                                 chosen ng-model="rowkey_column.dictionary"
-                                ng-options="dt as dt for dt in dictionaries">
-                            <option value="">-- choose dictionary --</option>
                                 ng-options="dt as dt for dt in cubeConfig.dictionaries">
                         </select>
-
                         <span ng-if="state.mode=='view'">{{rowkey_column.dictionary}}</span>
                     </div>
                 </td>
@@ -155,8 +131,6 @@
         </table>
 
         <button class="btn btn-sm btn-info" style="margin-left:42px"
-                ng-click="addNewRowkeyColumn()" ng-show="state.mode=='edit'">New Rowkey
-            Column<i
-                    class="fa fa-plus"></i></button>
+                ng-click="addNewRowkeyColumn()" ng-show="state.mode=='edit'">New Rowkey Column<i class="fa fa-plus"></i></button>
     </div>
 </div>

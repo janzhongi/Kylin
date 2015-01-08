@@ -1,5 +1,5 @@
 
-KylinApp.controller('WizardCubeSchemaCtrl', function ($scope, QueryService, UserService, ProjectService, AuthenticationService,SweetAlert,WizardHandler,$log) {
+KylinApp.controller('CubeSchemaCtrl', function ($scope, QueryService, UserService, ProjectService, AuthenticationService,SweetAlert,WizardHandler,$log) {
     //~ Define metadata & class
     $scope.projects = [];
     $scope.newDimension = null;

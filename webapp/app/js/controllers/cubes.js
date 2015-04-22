@@ -478,4 +478,3 @@ var jobSubmitCtrl = function ($scope, $modalInstance, CubeService, MessageServic
     $modalInstance.dismiss('cancel');
   };
 };
-

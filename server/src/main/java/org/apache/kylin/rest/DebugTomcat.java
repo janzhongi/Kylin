@@ -89,6 +89,9 @@ public class DebugTomcat {
 
         // tomcat start
         tomcat.start();
+        String filepath = System.getProperty("catalina.home");
+        File file =  new File(filepath);
+        System.out.println("Absolute path:"+file.getAbsolutePath());
         tomcat.getServer().await();
     }
 

@@ -274,5 +274,10 @@
       <name>fs.permissions.umask-mode</name>
       <value>022</value>
     </property>
+
+    <property>
+        <name>dfs.client.block.write.replace-datanode-on-failure.enable</name>
+        <value>true</value>
+    </property>
     
   </configuration>

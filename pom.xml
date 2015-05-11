@@ -552,6 +552,7 @@
         <module>server</module>
         <module>jdbc</module>
         <module>invertedindex</module>
+        <module>monitor</module>
     </modules>
 
     <profiles>

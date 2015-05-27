@@ -21,7 +21,6 @@ package org.apache.kylin.monitor;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-
 import java.io.*;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -52,9 +51,12 @@ public class ConfigUtils {
     public static final String KYLIN_LOG_CONF_HOME = "KYLIN_LOG_CONF_HOME";
     public static final String CATALINA_HOME = "CATALINA_HOME";
     public static final String KYLIN_MONITOR_CONF_PROP_FILE = "kylin.properties";
-    public static final String QUERY_LOG_PARSE_RESULT_DIR = "query.log.parse.result.dir";
+    public static final String LOG_PARSE_RESULT_DIR = "log.parse.result.dir";
     public static final String QUERY_PARSE_RESULT_FILE_NAME = "query.log.parse.result.filename";
     public static final String QUERY_LOG_FILE_PATTERN = "query.log.file.pattern";
+
+    public static final String REQUEST_PARSE_RESULT_FILE_NAME = "request.log.parse.result.filename";
+    public static final String REQUEST_LOG_FILE_PATTERN = "request.log.file.pattern";
 
 
     public void loadMonitorParam() throws IOException {
@@ -105,6 +107,7 @@ public class ConfigUtils {
             logger.warn("KYLIN_HOME was not set");
             return kylinHome;
         }
+        logger.info("KYLIN_HOME is :"+kylinHome);
         return kylinHome;
     }
 
@@ -116,7 +119,7 @@ public class ConfigUtils {
     }
 
 
-    public String getQueryLogBaseDir() {
+    public String getLogBaseDir() {
 
         String kylinLogConfHome = System.getProperty(KYLIN_LOG_CONF_HOME);
         if (!StringUtils.isEmpty(kylinLogConfHome)) {
@@ -131,8 +134,8 @@ public class ConfigUtils {
         return path;
     }
 
-    public String getQueryLogParseResultDir() {
-        return this.monitorConfig.getProperty(QUERY_LOG_PARSE_RESULT_DIR);
+    public String getLogParseResultDir() {
+        return this.monitorConfig.getProperty(LOG_PARSE_RESULT_DIR);
     }
 
     public String getQueryParseResultFileName() {
@@ -142,6 +145,18 @@ public class ConfigUtils {
     public String getQueryLogFilePattern() {
         return this.monitorConfig.getProperty(QUERY_LOG_FILE_PATTERN);
     }
+
+
+    //API Request
+    public String getRequestParseResultFileName() {
+        return this.monitorConfig.getProperty(REQUEST_PARSE_RESULT_FILE_NAME);
+    }
+
+    public String getRequestLogFilePattern() {
+        return this.monitorConfig.getProperty(REQUEST_LOG_FILE_PATTERN);
+    }
+
+
 
     public static void addClasspath(String path) throws Exception {
         File file = new File(path);

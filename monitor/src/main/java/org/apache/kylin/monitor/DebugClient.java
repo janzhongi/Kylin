@@ -20,7 +20,6 @@
 package org.apache.kylin.monitor;
 
 import org.apache.log4j.Logger;
-
 import java.io.File;
 
 
@@ -50,9 +49,11 @@ public class DebugClient {
 
 
         QueryParser queryParser = new QueryParser();
+        ApiRequestParser apiParser = new ApiRequestParser();
 
         try {
             queryParser.start();
+            apiParser.start();
         } catch (Exception e) {
             logger.info("Failed to start QueryParser ",e);
         }

@@ -80,6 +80,7 @@ public class CubingJob extends DefaultChainedExecutable {
             default:
                 return null;
         }
+        logMsg = logMsg!=null?logMsg:"";
         String content = ExecutableConstants.NOTIFY_EMAIL_TEMPLATE;
         content = content.replaceAll("\\$\\{job_name\\}", getName());
         content = content.replaceAll("\\$\\{result\\}", state.toString());

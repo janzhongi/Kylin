@@ -31,29 +31,28 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * @author jiazhong
  */
-public class QueryParser {
+public class ApiRequestParser {
 
-    final static Logger logger = Logger.getLogger(QueryParser.class);
+    final static Logger logger = Logger.getLogger(ApiRequestParser.class);
 
     final static Charset ENCODING = StandardCharsets.UTF_8;
 
-    static String QUERY_PARSE_RESULT_PATH = null;
+    static String REQUEST_PARSE_RESULT_PATH = null;
 
-    final static String[] KYLIN_QUERY_CSV_HEADER = {"REQUEST TIME", "SQL", "USER", "IS_SUCCESS", "DURATION", "PROJECT", "REALIZATION NAMES", "CUBOID IDS", "TOTAL SCAN COUNT", "RESULT ROW COUNT", "ACCEPT PARTIAL", "IS PARTIAL RESULT", "HIT CACHE", "MESSAGE"};
+    final static String[] KYLIN_REQUEST_CSV_HEADER = {"REQUESTER", "REQ_TIME", "URI", "METHOD", "QUERY_STRING", "PAYLOAD","RESP_STATUS", "TARGET", "ACTION"};
 
     private ConfigUtils monitorConfig;
 
-    public QueryParser() {
+    public ApiRequestParser() {
         monitorConfig = ConfigUtils.getInstance();
         try {
             monitorConfig.loadMonitorParam();
@@ -63,34 +62,34 @@ public class QueryParser {
     }
 
     public void start() throws IOException, ParseException {
-        QueryParser.QUERY_PARSE_RESULT_PATH = ConfigUtils.getInstance().getLogParseResultDir() + ConfigUtils.getInstance().getQueryParseResultFileName();
-        this.parseQueryInit();
+        ApiRequestParser.REQUEST_PARSE_RESULT_PATH = ConfigUtils.getInstance().getLogParseResultDir() + ConfigUtils.getInstance().getRequestParseResultFileName();
+        this.parseRequestInit();
 
-        //get query file has been read
-        String[] hasReadFiles = MonitorMetaManager.getReadQueryLogFileList();
+        //get api req log files have been read
+        String[] hasReadFiles = MonitorMetaManager.getReadApiReqLogFileList();
 
-        //get all log files
-        File[] files = this.getQueryLogFiles();
-
+        File[] files = this.getRequestLogFiles();
         for (File file : files) {
             if(!Arrays.asList(hasReadFiles).contains(file.getName())) {
-                this.parseQueryLog(file.getPath(), QueryParser.QUERY_PARSE_RESULT_PATH);
-                MonitorMetaManager.markQueryFileAsRead(file.getName());
+                this.parseRequestLog(file.getPath(), ApiRequestParser.REQUEST_PARSE_RESULT_PATH);
+                MonitorMetaManager.markApiReqLogFileAsRead(file.getName());
             }
         }
     }
 
-    public void parseQueryInit() throws IOException {
+    public void parseRequestInit() throws IOException {
         FileSystem fs = null;
         try {
             Configuration conf = new Configuration();
             conf.set("dfs.client.block.write.replace-datanode-on-failure.policy", "NEVER");
             fs = FileSystem.get(conf);
-            org.apache.hadoop.fs.Path path = new org.apache.hadoop.fs.Path(QueryParser.QUERY_PARSE_RESULT_PATH);
+            org.apache.hadoop.fs.Path path = new org.apache.hadoop.fs.Path(ApiRequestParser.REQUEST_PARSE_RESULT_PATH);
             if (!fs.exists(path)) {
                 fs.create(path);
-                fs.close(); //need to close before get FileSystem again
-                this.writeResultToHdfs(QueryParser.QUERY_PARSE_RESULT_PATH, QueryParser.KYLIN_QUERY_CSV_HEADER);
+
+                //need to close before get FileSystem again
+                fs.close();
+                this.writeResultToHdfs(ApiRequestParser.REQUEST_PARSE_RESULT_PATH, ApiRequestParser.KYLIN_REQUEST_CSV_HEADER);
             }
         } catch (IOException e) {
             fs.close();
@@ -99,9 +98,9 @@ public class QueryParser {
     }
 
     //parse query log and convert to csv file to hdfs
-    public void parseQueryLog(String filePath, String dPath) throws ParseException, IOException {
+    public void parseRequestLog(String filePath, String dPath) throws ParseException, IOException {
 
-        logger.info("Start parsing file "+filePath+" !");
+        logger.info("Start parsing kylin api request file " + filePath + " !");
 
 //        writer config init
         FileSystem fs = this.getHdfsFileSystem();
@@ -109,57 +108,64 @@ public class QueryParser {
         OutputStreamWriter writer = new OutputStreamWriter(fs.append(resultStorePath));
         CSVWriter cwriter = new CSVWriter(writer);
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS");
-        Pattern p_query_start = Pattern.compile("^\\[.*\\]:\\[(.*),.*\\]\\[.*\\]\\[.*QueryService.logQuery.*\\].*");
-        Pattern p_query_end = Pattern.compile("^Message:(.*)$");
-        Pattern p_query_body = Pattern.compile("^\\[.*\\]:\\[(.*)\\]\\[.*\\]\\[.*\\].*\n^=+\\[QUERY\\]=+\n^SQL:(.*)\n^User:(.*)\n^Success:(.*)\n^Duration:(.*)\n^Project:(.*)\n^(Realization Names|Cube Names):(.*)\n^Cuboid Ids:(.*)\n^Total scan count:(.*)\n^Result row count:(.*)\n^Accept Partial:(.*)\n(^Is Partial Result:(.*)\n)?^Hit Cache:(.*)\n^Message:(.*)", Pattern.MULTILINE);
-        Matcher m_query_start = p_query_start.matcher("");
-        Matcher m_query_end = p_query_end.matcher("");
-        Matcher m_query_body = p_query_body.matcher("");
+        Pattern p_available = Pattern.compile("/kylin/api/(cubes|user)+.*");
+        Pattern p_request = Pattern.compile("^.*\\[.*KylinApiFilter.logRequest.*\\].*REQUEST:.*REQUESTER=(.*);REQ_TIME=(.*);URI=(.*);METHOD=(.*);QUERY_STRING=(.*);PAYLOAD=(.*);RESP_STATUS=(.*);$");
+        Pattern p_uri = Pattern.compile("/kylin/api/(\\w+)(/.*/)*(.*)$");
+        Matcher m_available = p_available.matcher("");
+        Matcher m_request = p_request.matcher("");
+        Matcher m_uri = p_uri.matcher("");
 
-        boolean query_start = false;
-        StringBuffer query_body = new StringBuffer("");
         Path path = Paths.get(filePath);
         try (
                 BufferedReader reader = Files.newBufferedReader(path, ENCODING);
         ) {
             String line = null;
             while ((line = reader.readLine()) != null) {
-                m_query_start.reset(line); //reset the input
-                m_query_end.reset(line);
+                //reset the input
+                m_available.reset(line);
+                m_request.reset(line);
 
-                // set start flag ,clear StringBuffer
-                if (m_query_start.find()) {
-                    query_start = true;
-                    query_body = new StringBuffer("");
-                }
-                if (query_start) {
-                    query_body.append(line + "\n");
-                }
-                if (m_query_end.find()) {
-                    query_start = false;
-                    m_query_body.reset(query_body);
-                    logger.info("parsing query...");
-                    logger.info(query_body);
-//                    skip group(6) and group(12)
-                    if (m_query_body.find()) {
-                        ArrayList<String> groups = new ArrayList<String>();
-                        int grp_count = m_query_body.groupCount();
-                        for (int i = 1; i <= grp_count; i++) {
-                            if (i != 7 && i != 13) {
-                                groups.add(m_query_body.group(i));
-                            }
+                //filter unnecessary info
+                if(m_available.find()) {
+
+                    //filter GET info
+                    if (m_request.find()&&!m_request.group(4).equals("GET")) {
+
+                        List<String> groups = new ArrayList<String>();
+                        for (int i = 1; i <= m_request.groupCount(); i++) {
+                            groups.add(m_request.group(i));
                         }
 
-                        long start_time = format.parse(groups.get(0)).getTime() - (int) (Double.parseDouble(groups.get(4)) * 1000);
-                        groups.set(0, format.format(new Date(start_time)));
+                        String uri = m_request.group(3);
+                        m_uri.reset(uri);
+                        if (m_uri.find()) {
+
+                            //add target
+                            groups.add(m_uri.group(1));
+
+                            //add action
+                            if(m_uri.group(1).equals("cubes")){
+                                switch (m_request.group(4)){
+                                    case "DELETE":
+                                        groups.add("drop");
+                                        break;
+                                    case "POST":
+                                        groups.add("save");
+                                        break;
+                                    default:
+                                        //add parse action
+                                        groups.add(m_uri.group(3));
+                                        break;
+                                }
+                            }
+
+                        }
                         String[] recordArray = groups.toArray(new String[groups.size()]);
-//                        write to hdfs
+                        //write to hdfs
                         cwriter.writeNext(recordArray);
-
                     }
-
                 }
+
 
             }
         } catch (IOException ex) {
@@ -170,13 +176,10 @@ public class QueryParser {
             fs.close();
         }
 
-        logger.info("Finish parsing file "+filePath+" !");
+        logger.info("Finish parsing file " + filePath + " !");
 
     }
 
-    /*
-     * write parse result to hdfs
-     */
     public void writeResultToHdfs(String dPath, String[] record) throws IOException {
         OutputStreamWriter writer = null;
         CSVWriter cwriter = null;
@@ -198,29 +201,21 @@ public class QueryParser {
         }
     }
 
+    public File[] getRequestLogFiles() {
 
-    /*
-     * get all query log files
-     */
-    public File[] getQueryLogFiles() {
+        String request_log_file_pattern = monitorConfig.getRequestLogFilePattern();
 
-        String query_log_file_pattern = monitorConfig.getQueryLogFilePattern();
+        String request_log_dir_path = monitorConfig.getLogBaseDir();
 
-        String query_log_dir_path = monitorConfig.getLogBaseDir();
+        File request_log_dir = new File(request_log_dir_path);
 
-        File query_log_dir = new File(query_log_dir_path);
+        FileFilter filter = new RegexFileFilter(request_log_file_pattern);
 
-        FileFilter filter = new RegexFileFilter(query_log_file_pattern);
+        File[] request_log_files = request_log_dir.listFiles(filter);
 
-        File[] query_log_files = query_log_dir.listFiles(filter);
-
-        return query_log_files;
+        return request_log_files;
     }
 
-
-    /*
-     * get hdfs fileSystem
-     */
     public FileSystem getHdfsFileSystem() throws IOException {
         Configuration conf = new Configuration();
         conf.set("dfs.client.block.write.replace-datanode-on-failure.policy", "NEVER");

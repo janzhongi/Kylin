@@ -186,10 +186,11 @@ public class ConfigUtils {
 
     public String getKylinHdfsWorkingDir() {
         String root =  this.monitorConfig.getProperty(KYLIN_HDFS_WORKING_DIR);
-        if (!root.endsWith("/")) {
-            root += "/";
-        }
-        return root + getMetadataUrlPrefix();
+        return root;
+//        if (!root.endsWith("/")) {
+//            root += "/";
+//        }
+//        return root + getMetadataUrlPrefix();
     }
     public String getQueryLogParseResultDir() {
         return this.getKylinHdfsWorkingDir()+"/performance/query/";

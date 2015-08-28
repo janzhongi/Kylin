@@ -18,7 +18,10 @@
 
 package org.apache.kylin.monitor;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -26,9 +29,17 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.datanucleus.util.StringUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * Created by jiazhong on 2015/6/17.
@@ -56,6 +67,10 @@ public class HiveJdbcClient {
 
     final static Logger logger = Logger.getLogger(HiveJdbcClient.class);
 
+    final static String KYLIN_JOB_CONF_XML = "kylin_job_conf.xml";
+
+    static String MAP_QUEUE_NAME = "";
+
     private static String driverName = "org.apache.hive.jdbc.HiveDriver";
     private static ConfigUtils monitorConfig = ConfigUtils.getInstance();
 
@@ -79,12 +94,20 @@ public class HiveJdbcClient {
      */
     public void start() throws SQLException, IOException {
 
+        MAP_QUEUE_NAME = getQueueName();
+
+        if(org.apache.commons.lang.StringUtils.isEmpty(MAP_QUEUE_NAME)){
+            MAP_QUEUE_NAME = monitorConfig.getKylinMapJobQueue();
+        }
+
         String CON_URL = monitorConfig.getHiveJdbcConUrl();
 
-        String USER_NAME = monitorConfig.getHiveJdbcConUserName();
-        String PASSWD = monitorConfig.getHiveJdbcConPasswd();
+//        String USER_NAME = monitorConfig.getHiveJdbcConUserName();
+//        String PASSWD = monitorConfig.getHiveJdbcConPasswd();
+        java.util.Properties properties = new Properties();
+        properties.put("mapred.job.queue.name", MAP_QUEUE_NAME);
 
-        Connection con = DriverManager.getConnection(CON_URL, USER_NAME, PASSWD);
+        Connection con = DriverManager.getConnection(CON_URL,properties );
         Statement stmt = con.createStatement();
         ResultSet res = null;
 
@@ -205,6 +228,33 @@ public class HiveJdbcClient {
         return monthStasticSqlConvert(SQL_EACH_DAY_PERCENTILE);
     }
 
+    public String getQueueName() throws IOException {
+        String queueName = "";
+        InputStream stream =  this.getClass().getClassLoader().getResourceAsStream(KYLIN_JOB_CONF_XML);
+        if (stream!=null) {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder;
+            Document doc;
+            try {
+                builder = factory.newDocumentBuilder();
+                doc = builder.parse(stream);
+                NodeList nl = doc.getElementsByTagName("property");
+                for (int i = 0; i < nl.getLength(); i++) {
+                    String name = doc.getElementsByTagName("name").item(i).getFirstChild().getNodeValue();
+                    String value = doc.getElementsByTagName("value").item(i).getFirstChild().getNodeValue();
+                    if (name.equals("mapreduce.job.queuename")) {
+                        queueName = value;
+                    }
+                }
+
+            } catch (ParserConfigurationException e) {
+                throw new IOException(e);
+            } catch (SAXException e) {
+                throw new IOException(e);
+            }
+        }
+        return queueName;
+    }
     public String monthStasticSqlConvert(String sql) {
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");

@@ -111,7 +111,7 @@ public class HiveJdbcClient {
 
         Connection con = DriverManager.getConnection(CON_URL,properties );
         Statement stmt = con.createStatement();
-        stmt.executeQuery("set mapred.job.queue.name="+MAP_QUEUE_NAME);
+        stmt.execute("set mapred.job.queue.name="+MAP_QUEUE_NAME);
         ResultSet res = null;
 
         SQL_GENERATE_QUERY_LOG_TABLE = generateQueryLogSql();

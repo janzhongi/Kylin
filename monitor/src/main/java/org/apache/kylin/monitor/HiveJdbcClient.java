@@ -100,6 +100,8 @@ public class HiveJdbcClient {
             MAP_QUEUE_NAME = monitorConfig.getKylinMapJobQueue();
         }
 
+        logger.info("mapred.job.queue.name:"+MAP_QUEUE_NAME);
+
         String CON_URL = monitorConfig.getHiveJdbcConUrl();
 
 //        String USER_NAME = monitorConfig.getHiveJdbcConUserName();
@@ -109,6 +111,7 @@ public class HiveJdbcClient {
 
         Connection con = DriverManager.getConnection(CON_URL,properties );
         Statement stmt = con.createStatement();
+        stmt.executeQuery("set mapred.job.queue.name="+MAP_QUEUE_NAME);
         ResultSet res = null;
 
         SQL_GENERATE_QUERY_LOG_TABLE = generateQueryLogSql();

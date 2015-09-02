@@ -50,18 +50,20 @@ public class AirLineParser {
     final static Charset ENCODING = StandardCharsets.UTF_8;
     final static String AIRLINE_FILE_PATTERN = "On_Time_On_Time_Performance(.*).*$";
     final static String AIRLINE_PARSE_RESULT_FILENAME = "airline/airline.csv";
-    final static String CARRIER_PARSE_RESULT_FILENAME = "carrier/carrier.csv";
-    final static String AIRPORT_PARSE_RESULT_FILENAME = "airport/airport.csv";
+    final static String ORIGIN_PARSE_RESULT_FILENAME = "origin/origin.csv";
+    final static String DEST_PARSE_RESULT_FILENAME = "dest/dest.csv";
     static String AIRLINE_PARSE_RESULT_PATH = null;
-    static String CARRIER_PARSE_RESULT_PATH = null;
-    static String AIRPORT_PARSE_RESULT_PATH = null;
+    static String ORIGIN_PARSE_RESULT_PATH = null;
+    static String DEST_PARSE_RESULT_PATH = null;
 
     final static String[] AIRLINE_HEADER = { "FLIGHT_ID", "FLIGHT_DATE", "FLIGHT_NUM","DEP_TIME","DEP_DELAY","ARRIVAL_TIME","ARRIVAL_DELAY","UNIQUE_CARRIER","ORIGIN_AIRPORT_ID","DEST_AIRPORT_ID"};
     final static String[] ORIGIN_HEADER = { "ORIGIN_AIRPORT_ID","ORIGIN","ORIGIN_CITY","ORIGIN_STATE"};
     final static String[] DEST_HEADER = { "DEST_AIRPORT_ID","DEST","DEST_CITY","DEST_STATE"};
-//    final static String[] DEST_HEADER = { "FLIGHT_ID","ORIGIN_AIRPORT_ID","ORIGIN","ORIGIN_CITY", "DEST_AIRPORT_ID","DEST","DEST_CITY"};
 
     List<File> logFiles = new ArrayList<File>();
+
+    HashSet<List<String>> uniqOrigin = new HashSet<>();
+    HashSet<List<String>> uniqDest = new HashSet<>();
 
     private ConfigUtils monitorConfig;
 
@@ -81,12 +83,13 @@ public class AirLineParser {
 
     public void start() throws IOException, ParseException {
         AirLineParser.AIRLINE_PARSE_RESULT_PATH = ConfigUtils.getInstance().getAirlineParseResultDir() + AIRLINE_PARSE_RESULT_FILENAME;
-        AirLineParser.CARRIER_PARSE_RESULT_PATH = ConfigUtils.getInstance().getAirlineParseResultDir() + CARRIER_PARSE_RESULT_FILENAME;
-        AirLineParser.AIRPORT_PARSE_RESULT_PATH = ConfigUtils.getInstance().getAirlineParseResultDir() + AIRPORT_PARSE_RESULT_FILENAME;
+        AirLineParser.ORIGIN_PARSE_RESULT_PATH = ConfigUtils.getInstance().getAirlineParseResultDir() + ORIGIN_PARSE_RESULT_FILENAME;
+        AirLineParser.DEST_PARSE_RESULT_PATH = ConfigUtils.getInstance().getAirlineParseResultDir() + DEST_PARSE_RESULT_FILENAME;
         this.parseInit();
 
         //get query file has been read
         String[] hasReadFiles = MonitorMetaManager.getAirlineFileList();
+//        String[] hasReadFiles = new String[]{};
 
         //get all airLine files
         List<File> files = this.getAirlineFiles();
@@ -94,9 +97,12 @@ public class AirLineParser {
         for (File file : files) {
             if (!Arrays.asList(hasReadFiles).contains(file.getName())) {
                 this.parseAirlineFile(file.getPath());
-                MonitorMetaManager.markFileAsRead(file.getName());
+//                MonitorMetaManager.markFileAsRead(file.getName());
             }
         }
+
+        this.writeOrigin();
+        this.writeDest();
     }
 
     public void parseInit() throws IOException {
@@ -113,19 +119,19 @@ public class AirLineParser {
             }
 
             fs = FileSystem.get(conf);
-            org.apache.hadoop.fs.Path carrierPath = new org.apache.hadoop.fs.Path(AirLineParser.CARRIER_PARSE_RESULT_PATH);
-            if (!fs.exists(carrierPath)) {
-                fs.create(carrierPath);
+            org.apache.hadoop.fs.Path originPath = new org.apache.hadoop.fs.Path(AirLineParser.ORIGIN_PARSE_RESULT_PATH);
+            if (!fs.exists(originPath)) {
+                fs.create(originPath);
                 fs.close(); //need to close before get FileSystem again
-                this.writeResultToHdfs(AirLineParser.CARRIER_PARSE_RESULT_PATH, AirLineParser.ORIGIN_HEADER);
+                this.writeResultToHdfs(AirLineParser.ORIGIN_PARSE_RESULT_PATH, AirLineParser.ORIGIN_HEADER);
             }
 
             fs = FileSystem.get(conf);
-            org.apache.hadoop.fs.Path airportPath = new org.apache.hadoop.fs.Path(AirLineParser.AIRPORT_PARSE_RESULT_PATH);
-            if (!fs.exists(airportPath)) {
-                fs.create(airportPath);
+            org.apache.hadoop.fs.Path destPath = new org.apache.hadoop.fs.Path(AirLineParser.DEST_PARSE_RESULT_PATH);
+            if (!fs.exists(destPath)) {
+                fs.create(destPath);
                 fs.close(); //need to close before get FileSystem again
-                this.writeResultToHdfs(AirLineParser.AIRPORT_PARSE_RESULT_PATH, AirLineParser.DEST_HEADER);
+                this.writeResultToHdfs(AirLineParser.DEST_PARSE_RESULT_PATH, AirLineParser.DEST_HEADER);
             }
 
         } catch (IOException e) {
@@ -142,19 +148,15 @@ public class AirLineParser {
         logger.info("Start parsing file " + filePath + " !");
 
         //        writer config init
-        FileSystem fs = this.getHdfsFileSystem();
-        org.apache.hadoop.fs.Path airlinePath = new org.apache.hadoop.fs.Path(AirLineParser.AIRLINE_PARSE_RESULT_PATH);
-        org.apache.hadoop.fs.Path airportPath = new org.apache.hadoop.fs.Path(AirLineParser.AIRPORT_PARSE_RESULT_PATH);
-        org.apache.hadoop.fs.Path carrierPath = new org.apache.hadoop.fs.Path(AirLineParser.CARRIER_PARSE_RESULT_PATH);
+//        FileSystem fs = this.getHdfsFileSystem();
+//        org.apache.hadoop.fs.Path airlinePath = new org.apache.hadoop.fs.Path(AirLineParser.AIRLINE_PARSE_RESULT_PATH);
+//        org.apache.hadoop.fs.Path destPath = new org.apache.hadoop.fs.Path(AirLineParser.DEST_PARSE_RESULT_PATH);
+//
+//        OutputStreamWriter airLineWriter = new OutputStreamWriter(fs.append(airlinePath));
+//        CSVWriter lineHdfsWriter = new CSVWriter(airLineWriter, '|', CSVWriter.NO_QUOTE_CHARACTER);
 
-        OutputStreamWriter airLineWriter = new OutputStreamWriter(fs.append(airlinePath));
-        CSVWriter lineHdfsWriter = new CSVWriter(airLineWriter, '|', CSVWriter.NO_QUOTE_CHARACTER);
 
-        OutputStreamWriter airportWriter = new OutputStreamWriter(fs.append(airportPath));
-        CSVWriter portHdfsWriter = new CSVWriter(airportWriter, '|', CSVWriter.NO_QUOTE_CHARACTER);
 
-        OutputStreamWriter carrierWriter = new OutputStreamWriter(fs.append(carrierPath));
-        CSVWriter  carrierHdfsWriter = new CSVWriter(carrierWriter, '|', CSVWriter.NO_QUOTE_CHARACTER);
 
         Path path = Paths.get(filePath);
         try {
@@ -166,47 +168,72 @@ public class AirLineParser {
                 String[] record = line.split(",");
                 String id = UUID.randomUUID().toString();
                 String date = record[0]+"-"+record[2]+"-"+record[3];
-                String[] airlineRecord = new String[]{id,date,record[10].replace("\"",""),record[32].replace("\"",""),record[33].replace("\"",""),record[43].replace("\"",""),record[44]};
-                String[] airportRecord = new String[]{id,record[11],record[14].replace("\"",""),record[15].replace("\"",""),record[21],record[24].replace("\"",""),record[25].replace("\"","")};
-                String[] carrierRecord = new String[]{id,record[6].replace("\"","")};
-                lineHdfsWriter.writeNext(airlineRecord);
-                portHdfsWriter.writeNext(airportRecord);
-                carrierHdfsWriter.writeNext(carrierRecord);
-//                System.out.println(line);
-//                System.out.println(airlineRecord.toString());
-//                System.out.println(airportRecord.toString());
-//                System.out.println(carrierRecord.toString());
+                String[] airlineRecord = new String[]{id,date,record[10].replace("\"",""),record[32].replace("\"",""),record[33].replace("\"",""),record[43].replace("\"",""),record[44],record[6].replace("\"", ""),record[11].replace("\"",""),record[21].replace("\"","")};
+                String[] originRecord = new String[]{record[11].replace("\"",""),record[14].replace("\"",""),record[15].replace("\"",""),record[16].replace("\"","")};
+                String[] destRecord = new String[]{record[21].replace("\"", ""),record[24].replace("\"",""),record[25].replace("\"",""),record[26].replace("\"","")};
+                uniqOrigin.add(Arrays.asList(originRecord));
+                uniqDest.add(Arrays.asList(destRecord));
+//                lineHdfsWriter.writeNext(airlineRecord);
             }
         } catch (IOException ex) {
             logger.info("Failed to write to hdfs:", ex);
         } finally {
-            if(lineHdfsWriter != null) {
-                lineHdfsWriter.close();
-            }
-            if(portHdfsWriter != null) {
-                portHdfsWriter.close();
-            }
-            if(carrierHdfsWriter != null) {
-                carrierHdfsWriter.close();
-            }
-            if(airLineWriter != null) {
-                lineHdfsWriter.close();
-            }
-            if(airportWriter != null) {
-                portHdfsWriter.close();
-            }
-            if(carrierWriter != null) {
-                carrierHdfsWriter.close();
-            }
-
-            if(fs != null) {
-                fs.close();
-            }
+//            if(lineHdfsWriter != null) {
+//                lineHdfsWriter.close();
+//            }
+//             if(airLineWriter != null) {
+//                lineHdfsWriter.close();
+//            }
+//            if(fs != null) {
+//                fs.close();
+//            }
         }
 
         logger.info("Finish parsing file " + filePath + " !");
 
     }
+
+    public void writeOrigin() throws IOException {
+        org.apache.hadoop.fs.Path originPath = new org.apache.hadoop.fs.Path(AirLineParser.ORIGIN_PARSE_RESULT_PATH);
+        FileSystem fs = this.getHdfsFileSystem();
+        OutputStreamWriter originWriter = new OutputStreamWriter(fs.append(originPath));
+        CSVWriter  originHdfsWriter = new CSVWriter(originWriter, '|', CSVWriter.NO_QUOTE_CHARACTER);
+
+        List<String[]> origin_arr = new ArrayList<>();
+        for(List<String> origin:uniqOrigin){
+            origin_arr.add(origin.toArray(new String[origin.size()]));
+        }
+
+        originHdfsWriter.writeAll(origin_arr);
+        if(originWriter!=null){
+            originWriter.close();
+        }
+        if(originHdfsWriter!=null){
+            originHdfsWriter.close();
+        }
+
+    }
+
+    public void writeDest() throws IOException {
+        org.apache.hadoop.fs.Path destPath = new org.apache.hadoop.fs.Path(AirLineParser.DEST_PARSE_RESULT_PATH);
+        FileSystem fs = this.getHdfsFileSystem();
+        OutputStreamWriter destWriter = new OutputStreamWriter(fs.append(destPath));
+        CSVWriter  destHdfsWriter = new CSVWriter(destWriter, '|', CSVWriter.NO_QUOTE_CHARACTER);
+
+        List<String[]> dest_arr = new ArrayList<>();
+        for(List<String> dest:uniqDest){
+            dest_arr.add(dest.toArray(new String[dest.size()]));
+        }
+        destHdfsWriter.writeAll(dest_arr);
+
+        if(destWriter!=null){
+            destWriter.close();
+        }
+        if(destHdfsWriter!=null){
+            destHdfsWriter.close();
+        }
+    }
+
 
     /*
      * write parse result to hdfs

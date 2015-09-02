@@ -34,15 +34,6 @@ public class DebugAirlineParseClient {
 
     public static void main(String[] args) throws Exception {
 
-        // test_case_data/sandbox/ contains HDP 2.2 site xmls which is dev sandbox
-//        ConfigUtils.addClasspath(new File("../examples/test_case_data/sandbox").getAbsolutePath());
-
-        //set log base dir ,will also get from $KYLIN_HOME/tomcat/logs and config [ext.log.base.dir] in airline.properties
-//        System.setProperty(ConfigUtils.KYLIN_LOG_CONF_HOME, "../server/logs");
-
-        //get kylin.properties ,if not exist will get from $KYLIN_HOME/conf/
-//        System.setProperty(ConfigUtils.KYLIN_CONF, "../examples/test_case_data/sandbox");
-
         AirLineParser airLineParser = new AirLineParser();
         HiveJdbcClient jdbcClient = new HiveJdbcClient();
 
